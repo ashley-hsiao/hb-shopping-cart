@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-{% if session['cart'] %}
+{% if 'cart' in session %}
     <table class="table table-striped">
         <thead>
         <tr>

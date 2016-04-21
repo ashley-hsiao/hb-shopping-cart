@@ -74,14 +74,15 @@ def shopping_cart():
     ordered_melons = {}
     total = 0
 
-    for melon_id in set(session['cart']):
+    if 'cart' in session:
+        for melon_id in set(session['cart']):
 
-        ordered_melons[melon_id] = {}
-        ordered_melons[melon_id]['quantity'] = session["cart"].count(melon_id)
-        melon = melons.get_by_id(melon_id)
-        ordered_melons[melon_id]['name'] = melon.common_name
-        ordered_melons[melon_id]['price'] = melon.price
-        total = total + (ordered_melons[melon_id]['quantity'] * ordered_melons[melon_id]['price'])        
+            ordered_melons[melon_id] = {}
+            ordered_melons[melon_id]['quantity'] = session["cart"].count(melon_id)
+            melon = melons.get_by_id(melon_id)
+            ordered_melons[melon_id]['name'] = melon.common_name
+            ordered_melons[melon_id]['price'] = melon.price
+            total = total + (ordered_melons[melon_id]['quantity'] * ordered_melons[melon_id]['price'])        
 
     # flash(ordered_melons) # Test code to see dictionary
 
