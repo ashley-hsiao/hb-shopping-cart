@@ -7,7 +7,7 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
 import jinja2
 
 import melons
@@ -71,6 +71,25 @@ def shopping_cart():
     #   - keep track of the total amt of the entire order
     # - hand to the template the total order cost and the list of melon types
 
+    ordered_melons = {}
+
+
+    if session['cart']:
+        for melon_id in session['cart']:
+
+            ordered_melons[melon_id]['quantity'] = 0
+            ordered_melons[melon_id]['name'] = None
+            ordered_melons[melon_id]['price'] = 0
+            # ordered_melons[melon_id]['quantity'] = ordered_melons.get(melon_id['quantity'], 0) + 1
+            # melon = melons.get_by_id(melon_id)
+            # ordered_melons[melon_id]['name'] = melon.common_name
+            # ordered_melons[melon_id]['price'] = melon.price
+            
+    else:
+        print "Your cart is empty."
+
+    flash(ordered_melons)
+
     return render_template("cart.html")
 
 
@@ -88,7 +107,15 @@ def add_to_cart(id):
     #
     # - add the id of the melon they bought to the cart in the session
 
-    return "Oops! This needs to be implemented!"
+    session['cart'] = session.get('cart', [])
+    session['cart'].append(id)
+
+    # flash(session['cart']) # Test code to see contents of session['cart']
+    # Add melon name to flash message later
+    flash("Melon added to cart")
+
+
+    return redirect("/cart")
 
 
 @app.route("/login", methods=["GET"])
