@@ -7,10 +7,11 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request
 import jinja2
 
 import melons
+from customers import customers
 from flask_debugtoolbar import DebugToolbarExtension
 
 
@@ -132,7 +133,21 @@ def process_login():
 
     # TODO: Need to implement this!
 
-    return "Oops! This needs to be implemented"
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if email in customers and customers[email].pw == password:
+        session['logged_in_customer_email'] = email
+        flash("Success! You are logged in.")
+        return redirect("/melons")
+    elif email in customers and customers[email].pw != password:
+        flash("Incorrect password.")
+        return redirect("/login")
+    else:
+        flash("No such email.")
+        return redirect("/login")
+
+    # return "Oops! This needs to be implemented"
 
 
 @app.route("/checkout")
