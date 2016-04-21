@@ -72,25 +72,20 @@ def shopping_cart():
     # - hand to the template the total order cost and the list of melon types
 
     ordered_melons = {}
+    total = 0
 
+    for melon_id in set(session['cart']):
 
-    if session['cart']:
-        for melon_id in session['cart']:
+        ordered_melons[melon_id] = {}
+        ordered_melons[melon_id]['quantity'] = session["cart"].count(melon_id)
+        melon = melons.get_by_id(melon_id)
+        ordered_melons[melon_id]['name'] = melon.common_name
+        ordered_melons[melon_id]['price'] = melon.price
+        total = total + (ordered_melons[melon_id]['quantity'] * ordered_melons[melon_id]['price'])        
 
-            ordered_melons[melon_id]['quantity'] = 0
-            ordered_melons[melon_id]['name'] = None
-            ordered_melons[melon_id]['price'] = 0
-            # ordered_melons[melon_id]['quantity'] = ordered_melons.get(melon_id['quantity'], 0) + 1
-            # melon = melons.get_by_id(melon_id)
-            # ordered_melons[melon_id]['name'] = melon.common_name
-            # ordered_melons[melon_id]['price'] = melon.price
-            
-    else:
-        print "Your cart is empty."
+    # flash(ordered_melons) # Test code to see dictionary
 
-    flash(ordered_melons)
-
-    return render_template("cart.html")
+    return render_template("cart.html", ordered_melons=ordered_melons, total=total)
 
 
 @app.route("/add_to_cart/<int:id>")
