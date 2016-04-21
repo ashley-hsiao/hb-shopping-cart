@@ -11,6 +11,7 @@ from flask import Flask, render_template, redirect, flash, session
 import jinja2
 
 import melons
+from flask_debugtoolbar import DebugToolbarExtension
 
 
 app = Flask(__name__)
@@ -111,7 +112,7 @@ def add_to_cart(id):
     flash("Melon added to cart")
 
 
-    return redirect("/cart")
+    return redirect("/melons")
 
 
 @app.route("/login", methods=["GET"])
@@ -146,4 +147,7 @@ def checkout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.debug = True
+    DebugToolbarExtension(app)
+    app.run()
+
