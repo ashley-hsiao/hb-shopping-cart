@@ -120,7 +120,11 @@ def add_to_cart(id):
 def show_login():
     """Show login form."""
 
-    return render_template("login.html")
+    if 'logged_in_customer_email' not in session: 
+        return render_template("login.html")
+    else:
+        flash("You are logged in")
+        return redirect("/melons")
 
 
 @app.route("/login", methods=["POST"])
@@ -131,10 +135,10 @@ def process_login():
     dictionary, look up the user, and store them in the session.
     """
 
-    # TODO: Need to implement this!
-
     email = request.form.get("email")
     password = request.form.get("password")
+
+    # TODO: Need to implement this!
 
     if email in customers and customers[email].pw == password:
         session['logged_in_customer_email'] = email
@@ -147,8 +151,16 @@ def process_login():
         flash("No such email.")
         return redirect("/login")
 
+
     # return "Oops! This needs to be implemented"
 
+@app.route('/logout')
+def process_logout():
+    """Log customer out of session and delete session key"""
+
+    del session['logged_in_customer_email']
+    flash('You have successfully logged out.')
+    return redirect("/melons")
 
 @app.route("/checkout")
 def checkout():
